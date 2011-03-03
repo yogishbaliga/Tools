@@ -41,12 +41,26 @@ mv solrconfig.xml.temp $SOLR_HOME/conf/solrconfig.xml
 
 pushd /usr/local/tomcat6/conf/Catalina/localhost
 
+# solrdev context is available at
+# http://localhost:8080/solrdev
+# Add/Update document via curl
+# curl 'http://localhost:8080/solrdev/update?commit=true' -H 'Content-Type: text/xml' --data-binary '<add><doc><field name="id">7</field></doc></add>'
+# 
+# Searching can be done via
+# curl 'http://localhost:8080/solrdev/select?q=pretty+young'
+# 
+# facets can be obtained via facet parameter
+# curl 'http://localhost:8080/solrdev/select?q=pretty+young&facet=true&facet.field=tags&facet.field=categories
+#
+# Filtering can be done via fq parameter without affecting the ranking
+# curl 'http://localhost:8080/solrdev/select?q=pretty+young&fq=tags:foo'
 cat <<EOF > solrdev.xml
 <?xml version="1.0" encoding="utf-8"?>
 <Context docBase="$SOLR_HOME/apache-solr-1.4.1.war" debug="0" crossContext="true">
   <Environment name="solr/home" type="java.lang.String" value="$SOLR_HOME" override="true"/>
 </Context>
 EOF
+
 
 #cat <<EOF > solrprod.conf
 #<Context docBase="/usr/local/tomcat6/data/solr/apache-solr-1.4.1.war" debug="0" crossContext="true">
